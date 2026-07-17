@@ -4,7 +4,7 @@ const router = express.Router();
 const verifyToken = require("../middleware/auth");
 
 const {getAdminDashboardData,getMonthWiseProfit,getDayWiseProfit} =require("../controllers/admin_controller");
-const {calculatePrince}=require("../services/calculateprice");
+const calculatePrince=require("../services/calculateprice");
 
 
 router.get("/get_dashboard_data",verifyToken,getAdminDashboardData);

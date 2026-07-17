@@ -133,8 +133,6 @@ const getAdminDashboardData = async (req, res) => {
 };
 
 
-
-
 const getMonthWiseProfit = async (req, res) => {
   try {
     const customers = await Customer.find();
@@ -224,6 +222,9 @@ const getDayWiseProfit = async (req, res) => {
     });
   }
 };
+
+
+
 
 module.exports = {
   getAdminDashboardData,

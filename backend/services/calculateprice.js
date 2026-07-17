@@ -40,6 +40,4 @@ const calculatePrice = async (req, res) => {
   }
 };
 
-module.exports = {
-  calculatePrice,
-};
+module.exports =calculatePrice;
