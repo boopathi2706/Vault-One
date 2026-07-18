@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const {createCustomer,getCustomerById, deleteCustomerById,getAllCustomer,paidedInterestAmount,principleAmountPaid,getLoanActiveCustomer,getLoanClosedCustomer,getLoanOverdueCustomer} = require("../controllers/customer_controller");
+const {createCustomer,getCustomerById, deleteCustomerById,getAllCustomer,paidedInterestAmount,principleAmountPaid,getLoanActiveCustomer,getLoanClosedCustomer,getLoanOverdueCustomer,getPaymentHistory, getPrices} = require("../controllers/customer_controller");
 const upload = require("../middleware/multer"); 
 const verifyToken = require("../middleware/auth");
 
@@ -23,5 +23,8 @@ router.put("/pay_principal/:id",verifyToken ,principleAmountPaid);
 router.get("/loan/active",verifyToken, getLoanActiveCustomer);
 router.get("/loan/closed",verifyToken, getLoanClosedCustomer);
 router.get("/loan/overdue",verifyToken, getLoanOverdueCustomer);
+router.get("/payment_history",verifyToken, getPaymentHistory,);
+router.get("/price",verifyToken, getPrices,);
+
 
 module.exports = router;

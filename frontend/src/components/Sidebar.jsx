@@ -15,15 +15,26 @@ const Sidebar = ({ open, setOpen }) => {
       path: "/dashboard",
     },
     {
-      name: "Add Customer",
+      name: "Customers",
       icon: <UserPlus size={20} />,
-      path: "/add-customer",
+      path: "/customer",
+    },
+    {
+      name: "Add Loan",
+      icon: <UserPlus size={20} />,
+      path: "/add_loan",
     },
     {
       name: "Reports",
       icon: <FileText size={20} />,
       path: "/reports",
     },
+    {
+      name: "Price check",
+      icon: <FileText size={20} />,
+      path: "/price_check",
+    },
+   
   ];
 
   return (
@@ -99,7 +110,7 @@ const Sidebar = ({ open, setOpen }) => {
           ))}
 
           <button
-            className="flex items-center gap-4 px-6 py-4 w-full hover:bg-red-600 mt-10"
+            className="flex items-center  gap-4 px-6 py-4 w-full hover:bg-red-600 mt-70"
             onClick={() => {
               localStorage.removeItem("token");
               window.location.href = "/";

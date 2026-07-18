@@ -17,6 +17,7 @@ import {
 } from "react-router-dom";
 
 import toast from "react-hot-toast";
+import Swal from "sweetalert2";
 
 import {
   getCustomerById,
@@ -53,68 +54,89 @@ const CustomerFullDetails = () => {
     }
   };
 
-  const handleInterest = async () => {
-    if (
-      !window.confirm(
-        "Receive interest payment?"
-      )
-    )
-      return;
+ const handleInterest = async () => {
+  const result = await Swal.fire({
+    title: "Receive Interest Payment?",
+    text: "This will reset the customer's interest amount.",
+    icon: "question",
+    showCancelButton: true,
+    confirmButtonColor: "#16a34a",
+    cancelButtonColor: "#6b7280",
+    confirmButtonText: "Yes, Receive",
+    cancelButtonText: "Cancel",
+  });
 
-    try {
-      const res = await payInterest(id);
+  if (!result.isConfirmed) return;
 
-      toast.success(res.message);
+  try {
+    const res = await payInterest(id);
 
-      loadCustomer();
-    } catch (err) {
-      toast.error(
-        err.response?.message
-      );
-    }
-  };
+    toast.success(res.message);
 
-  const handlePrincipal = async () => {
-    if (
-      !window.confirm(
-        "Close this loan?"
-      )
-    )
-      return;
+    loadCustomer();
+  } catch (err) {
+    toast.error(
+      err.response?.data?.message || "Failed to receive interest"
+    );
+  }
+};
 
-    try {
-      const res = await payPrincipal(id);
+ const handlePrincipal = async () => {
+  const result = await Swal.fire({
+    title: "Close Loan?",
+    text: "Principal payment will close this loan permanently.",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#2563eb",
+    cancelButtonColor: "#6b7280",
+    confirmButtonText: "Yes, Close Loan",
+    cancelButtonText: "Cancel",
+  });
 
-      toast.success(res.message);
+  if (!result.isConfirmed) return;
 
-      loadCustomer();
-    } catch (err) {
-      toast.error(
-        err.response?.message
-      );
-    }
-  };
+  try {
+    const res = await payPrincipal(id);
+
+    toast.success(res.message);
+
+    loadCustomer();
+  } catch (err) {
+    toast.error(
+      err.response?.data?.message || "Failed to close loan"
+    );
+  }
+};
 
   const handleDelete = async () => {
-    if (
-      !window.confirm(
-        "Delete this customer permanently?"
-      )
-    )
-      return;
+  const result = await Swal.fire({
+    title: "Delete Customer?",
+    html: `
+      <p>This action cannot be undone.</p>
+      <b style="color:red;">All customer images and records will be deleted.</b>
+    `,
+    icon: "error",
+    showCancelButton: true,
+    confirmButtonColor: "#dc2626",
+    cancelButtonColor: "#6b7280",
+    confirmButtonText: "Delete",
+    cancelButtonText: "Cancel",
+  });
 
-    try {
-      const res = await deleteCustomer(id);
+  if (!result.isConfirmed) return;
 
-      toast.success(res.message);
+  try {
+    const res = await deleteCustomer(id);
 
-      navigate("/customers");
-    } catch (err) {
-      toast.error(
-        err.response?.message
-      );
-    }
-  };
+    toast.success(res.message);
+
+    navigate("/customers");
+  } catch (err) {
+    toast.error(
+      err.response?.data?.message || "Delete failed"
+    );
+  }
+};
 
   if (loading)
     return (

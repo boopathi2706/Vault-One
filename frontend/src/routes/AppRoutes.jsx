@@ -1,9 +1,13 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Login from "../pages/Login/Login.jsx";
-import Dashboard from "../pages/Dashboard/Dashboard.jsx";
-import CustomerBoard from "../pages/Customer/CustomerBoard.jsx";
-import CustomerFullDetails from "../pages/Customer/CustomerFullDetails.jsx";
+import Login from "../pages/Login.jsx";
+import Dashboard from "../pages/Dashboard.jsx";
+import CustomerBoard from "../pages/CustomerBoard.jsx";
+import CustomerFullDetails from "../components/Customer/CustomerFullDetails.jsx";
 import ProtectedRoute from "./ProtectedRoute";
+import ReportBoard from "../pages/ReportBoard.jsx";
+import PriceBoard from "../pages/PriceBoard.jsx";
+import LoanBoard from "../pages/LoanBoard.jsx";
+import NotFoundPage from "../pages/NotFoundPage.jsx";
 
 const AppRoutes = () => {
   return (
@@ -20,17 +24,44 @@ const AppRoutes = () => {
           }
         />
          <Route
-          path="/add-customer"
+          path="/customer"
           element={
             <ProtectedRoute>
               <CustomerBoard/>
             </ProtectedRoute>
           }
+        /> <Route
+          path="/add_loan"
+          element={
+            <ProtectedRoute>
+              <LoanBoard/>
+            </ProtectedRoute>
+          }
         />
         <Route
     path="/customer/:id"
-    element={<CustomerFullDetails />}
+    element={
+       <ProtectedRoute>
+    <CustomerFullDetails />
+    </ProtectedRoute>}
   />
+         <Route
+          path="/reports"
+          element={
+            <ProtectedRoute>
+              <ReportBoard/>
+            </ProtectedRoute>
+          }
+        />
+         <Route
+          path="/price_check"
+          element={
+            <ProtectedRoute>
+              <PriceBoard/>
+            </ProtectedRoute>
+          }
+        />
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter>
   );

@@ -1,11 +1,10 @@
-import React from 'react'
 import { useState } from "react";
 import { Home, Menu } from "lucide-react";
-import Sidebar from "../../components/Sidebar";
+import Sidebar from "../components/Sidebar";
 import { Outlet } from "react-router-dom";
-import CustomerArea from './CustomerArea';
+import ReportArea from "../components/Reports/ReportArea";
 
-const CustomerBoard = () => {
+const ReportBoard = () => {
   const [open, setOpen] = useState(false);
 
   return (
@@ -39,7 +38,7 @@ const CustomerBoard = () => {
 
         <div className="p-6">
 
-         <CustomerArea/>
+        <ReportArea/>
 
         </div>
 
@@ -50,5 +49,4 @@ const CustomerBoard = () => {
   );
 };
 
-
-export default CustomerBoard
+export default ReportBoard

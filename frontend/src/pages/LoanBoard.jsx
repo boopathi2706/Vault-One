@@ -1,14 +1,11 @@
 import { useState } from "react";
 import { Home, Menu } from "lucide-react";
-import Sidebar from "../../components/Sidebar";
+import Sidebar from "../components/Sidebar";
 import { Outlet } from "react-router-dom";
+import LoanArea from "../components/Loan/LoanArea";
 
-import HomePage from "./Home"
-
-
-
-const Dashboard = () => {
-      const [open, setOpen] = useState(false);
+const LoanBoard = () => {
+    const [open, setOpen] = useState(false);
 
   return (
     <div className="flex">
@@ -41,7 +38,7 @@ const Dashboard = () => {
 
         <div className="p-6">
 
-          <HomePage/>
+         <LoanArea/>
 
         </div>
 
@@ -52,4 +49,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default LoanBoard

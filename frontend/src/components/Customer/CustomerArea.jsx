@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import CustomerFilter from "./CustomerFilter";
 import CustomerTable from "./CustomerTable";
 import Pagination from "./Pagination";
+import { exportCustomersToExcel } from "../../utils/exportCustomers";
+import { Download } from "lucide-react";
 
 import {
   getAllCustomers,
@@ -114,9 +116,15 @@ const CustomerArea = () => {
             </p>
 
           </div>
-
+           <button
+  onClick={() => exportCustomersToExcel(customers)}
+  className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-5 py-3 rounded-xl shadow-md transition"
+>
+  <Download size={18} />
+  Download Excel
+</button>
           <div className="bg-yellow-500 text-white rounded-xl px-6 py-3">
-
+           
             <p className="text-sm">
               Total Customers
             </p>

@@ -1,9 +1,12 @@
 const Customer = require("../models/Customer_Models");
 const{uploadImage}=require("../middleware/upload");
-const {getRateByPurity} =require("../utils/getgoldprice");
+const {getRateByPurity, getPrice} =require("../utils/getgoldprice");
 const calculateInterest=require("../services/calculateInterest");
 const cloudinary = require("../config/cloudinary");
+const fs = require("fs");
+const path = require("path");
 
+const FILE_PATH = path.join(__dirname, "../data/price.json");
 // create customer
 
 const createCustomer = async (req, res) => {
@@ -393,6 +396,112 @@ const getLoanOverdueCustomer = async (req, res) => {
   }
 };
 
+const getPaymentHistory = async (req, res) => {
+  try {
+    const customers = await Customer.find();
+
+    const paymentHistory = [];
+
+    for (const customer of customers) {
+
+      // Interest Payment History
+      if (
+        customer.interestPaymentDetails &&
+        customer.interestPaymentDetails.length > 0
+      ) {
+        customer.interestPaymentDetails.forEach((payment) => {
+          paymentHistory.push({
+            paymentType: "Interest",
+
+            customer: {
+              id: customer._id,
+              customerId: customer.customerId,
+              customerName: customer.customerName,
+              mobileNumber: customer.mobileNumber,
+              item: customer.item,
+              itemType: customer.itemType,
+              purity: customer.purity,
+              itemWeight: customer.itemWeight,
+            },
+
+            fromDate: payment.fromDate,
+            paidDate: payment.paidDate,
+            amountPaid: payment.amountPaid,
+          });
+        });
+      }
+
+      // Principal Payment History (Closed Loan)
+      if (
+        customer.loanStatus === "Closed" &&
+        customer.principalPaidDate
+      ) {
+        paymentHistory.push({
+          paymentType: "Principal",
+
+          customer: {
+            id: customer._id,
+            customerId: customer.customerId,
+            customerName: customer.customerName,
+            mobileNumber: customer.mobileNumber,
+            item: customer.item,
+            itemType: customer.itemType,
+            purity: customer.purity,
+            itemWeight: customer.itemWeight,
+          },
+
+          principalAmount: customer.principalAmount,
+          paidDate: customer.principalPaidDate,
+        });
+      }
+    }
+
+    // Latest payment first
+    paymentHistory.sort(
+      (a, b) => new Date(b.paidDate) - new Date(a.paidDate)
+    );
+
+    res.status(200).json({
+      success: true,
+      count: paymentHistory.length,
+      data: paymentHistory,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+
+const getPrices = async (req, res) => {
+  try {
+    await getPrice();
+    if (!fs.existsSync(FILE_PATH)) {
+      return res.status(404).json({
+        success: false,
+        message: "Price file not found.",
+      });
+    }
+
+    const data = JSON.parse(fs.readFileSync(FILE_PATH, "utf8"));
+    console.log(data.gold);
+    res.status(200).json({
+      success: true,
+      data: {
+        date: data.date,
+        goldRates: data.gold,
+        silverRates: data.silver,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
 
 
 
@@ -407,5 +516,7 @@ module.exports = {
   getLoanActiveCustomer,
   getLoanClosedCustomer,
   getLoanOverdueCustomer,
+  getPaymentHistory,
+  getPrices
 };
 
